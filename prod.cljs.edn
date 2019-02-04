@@ -1,0 +1,7 @@
+{:main app.core
+ :npm-deps false
+ :closure-defines {app.constants/environment "poduction"}
+ :foreign-libs [{:file "dist/index.bundle.js"
+                 :provides ["jss" "jss-preset-default"]
+                 :global-exports {jss jss
+                                  jss-preset-default jssPresetDefault}}]}
