@@ -136,5 +136,5 @@
    :caption-10 "0.2em"})
 
 (def font-families
-  {:open-sans "'Open Sans', sans-serif"
-   :monospace "'Lucida Console', Monaco, monospace"})
+  {:primary "'Open Sans', sans-serif"
+   :secondary "'Lucida Console', Monaco, monospace"})

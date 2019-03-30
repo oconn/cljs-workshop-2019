@@ -5,7 +5,7 @@
   {:line-height "1.5em"
    :font-size (gs [:font-size :label-20])
    :font-weight (gs [:font-weight :body-30])
-   :font-family (gs [:font-family :open-sans])
+   :font-family (gs [:font-family :primary])
    :margin "1em"})
 
 (defn base-button-styles
@@ -77,7 +77,7 @@
     :justify-content :space-between}
 
    ".notifier-alert-title"
-   {:font-family (gs [:font-family :open-sans])
+   {:font-family (gs [:font-family :primary])
     :font-weight (gs [:font-weight :body-30])
     :margin [(gs [:spacing :p40]) :auto]
     :color (gs [:colors :gray-scale-700])
@@ -86,7 +86,7 @@
     :width "100%"}
 
    ".notifier-alert-message"
-   {:font-family (gs [:font-family :open-sans])
+   {:font-family (gs [:font-family :primary])
     :font-weight (gs [:font-weight :body-20])
     :text-align :center
     :width "100%"}
@@ -105,7 +105,7 @@
     :left (gs [:spacing :p20])
     :padding (gs [:spacing :p20])
     :border-radius (gs [:radius :r4])
-    :font-family (gs [:font-family :open-sans])
+    :font-family (gs [:font-family :primary])
     :font-weight (gs [:font-weight :caption-20])
     :font-size (gs [:font-size :caption-20])
     :line-height "1.5em"

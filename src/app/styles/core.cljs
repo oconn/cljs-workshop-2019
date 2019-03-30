@@ -55,23 +55,21 @@
       style)))
 
 (defn create-font-styles
-  [font-style font-color]
-  {:font-size (gs [:font-size font-style])
-   :font-weight (gs [:font-weight font-style])
-   :line-height (gs [:font-height font-style])
-   :color font-color
+  [{:keys [style color family]}]
+  {:-webkit-text-size-adjust :none
+   :font-size (gs [:font-size style])
+   :font-weight (gs [:font-weight style])
+   :line-height (gs [:font-height style])
+   :color (gs [:colors color])
+   :font-family (gs [:font-family family])
 
    (gs [:queries :tablet])
    {:font-size
-    (gs [:font-size (-> font-style
-                        name
-                        (keyword "tablet"))])}
+    (gs [:font-size (-> style name (keyword "tablet"))])}
 
    (gs [:queries :phone])
    {:font-size
-    (gs [:font-size (-> font-style
-                        name
-                        (keyword "mobile"))])}})
+    (gs [:font-size (-> style name (keyword "mobile"))])}})
 
 (classes
  {"@global"

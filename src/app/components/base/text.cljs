@@ -1,235 +1,188 @@
 (ns app.components.base.text
-  (:require [app.styles.core :refer [styles->classes
+  (:require [devcards.core :as devcards]
+
+            [app.styles.core :refer [styles->classes
                                      gs
                                      add-class
                                      create-font-styles]]
-            [app.styles.typography :refer [margin]]))
-
-(defonce base-font-styles
-  {:font-family (gs [:font-family :open-sans])
-   :-webkit-text-size-adjust :none})
+            [app.styles.typography :refer [margin]])
+  (:require-macros [devcards.core :refer [defcard-rg]]))
 
 (def text-styles
   (reduce
-   (fn [acc [font-style font-color]]
-     (merge acc {font-style (create-font-styles font-style font-color)}))
+   (fn [acc font]
+     (merge acc {(or (:alias font)
+                     (:style font))
+                 (create-font-styles font)}))
+   {}
+   [{:style :display-20 :color :gray-scale-800 :family :primary}
+    {:style :display-10 :color :gray-scale-800 :family :primary}
+    {:style :title-40   :color :gray-scale-800 :family :primary}
+    {:style :title-30   :color :gray-scale-800 :family :primary}
+    {:style :title-20   :color :gray-scale-800 :family :primary}
+    {:style :title-10   :color :gray-scale-800 :family :primary}
+    {:style :body-30    :color :gray-scale-800 :family :primary}
+    {:style :body-20    :color :gray-scale-700 :family :primary}
+    {:style :body-10    :color :gray-scale-600 :family :primary}
+    {:style :caption-30 :color :gray-scale-600 :family :primary}
+    {:style :caption-20 :color :gray-scale-600 :family :primary}
+    {:style :caption-10 :color :gray-scale-600 :family :primary}
 
-   {:base base-font-styles
-
-    :link (merge
-           (create-font-styles :body-20 (gs [:colors :link]))
-           base-font-styles
-           {:cursor :pointer
-            :text-decoration :none})
-
-    :paragraph {:max-width "700px"
-                :margin [[(gs [:spacing :p20])
-                          :auto
-                          (gs [:spacing :p20])
-                          :auto]]
-
-                "& p"
-                {:margin-bottom (gs [:spacing :p20])}
-
-                "& h1, h2, h3, h4, h5 ,h6"
-                {:margin-bottom (gs [:spacing :p20])}}}
-   [[:display-20 (gs [:colors :gray-scale-800])]
-    [:title-40 (gs [:colors :gray-scale-800])]
-    [:title-30 (gs [:colors :gray-scale-800])]
-    [:title-20 (gs [:colors :gray-scale-800])]
-    [:title-10 (gs [:colors :gray-scale-800])]
-    [:body-30 (gs [:colors :gray-scale-800])]
-    [:body-20 (gs [:colors :gray-scale-700])]
-    [:body-10 (gs [:colors :gray-scale-600])]
-    [:label-30 (gs [:colors :gray-scale-600])]
-    [:label-20 (gs [:colors :gray-scale-600])]
-    [:label-10 (gs [:colors :gray-scale-600])]
-    [:caption-30 (gs [:colors :gray-scale-600])]
-    [:caption-20 (gs [:colors :gray-scale-600])]
-    [:caption-10 (gs [:colors :gray-scale-600])]]))
+    {:alias :display-20-alt
+     :style :display-20 :color :gray-scale-800 :family :secondary}
+    {:alias :display-10-alt
+     :style :display-10 :color :gray-scale-800 :family :secondary}
+    {:alias :title-40-alt
+     :style :title-40   :color :gray-scale-800 :family :secondary}
+    {:alias :title-30-alt
+     :style :title-30   :color :gray-scale-800 :family :secondary}
+    {:alias :title-20-alt
+     :style :title-20   :color :gray-scale-800 :family :secondary}
+    {:alias :title-10-alt
+     :style :title-10   :color :gray-scale-800 :family :secondary}
+    {:alias :body-30-alt
+     :style :body-30    :color :gray-scale-800 :family :secondary}
+    {:alias :body-20-alt
+     :style :body-20    :color :gray-scale-700 :family :secondary}
+    {:alias :body-10-alt
+     :style :body-10    :color :gray-scale-600 :family :secondary}
+    {:alias :caption-30-alt
+     :style :caption-30 :color :gray-scale-600 :family :secondary}
+    {:alias :caption-20-alt
+     :style :caption-20 :color :gray-scale-600 :family :secondary}
+    {:alias :caption-10-alt
+     :style :caption-10 :color :gray-scale-600 :family :secondary}]))
 
 (def classes (styles->classes text-styles))
 
-(defn- render-text
-  [tag
-   text-key
-   {:keys [class] :as options}
-   content]
-  [tag (cond-> (merge {:class [(text-key classes)
-                               (:base classes)]}
-                      (dissoc options :class))
-         class (update :class (if (string? class) conj into) class))
-   content])
+(defn- create-font
+  ([font-name tag content]
+   [create-font font-name tag {} content])
+  ([font-name tag options content]
+   [tag (add-class options font-name classes) content]))
 
-(defn- render-secondary-text
-  [tag
-   text-key
-   {:keys [class] :as options}
-   content]
-  [tag (cond-> (merge {:class [(text-key classes)
-                               (:secondary classes)]}
-                      (dissoc options :class))
-         class (update :class (if (string? class) conj into) class))
-   content])
+(def display-20 (partial create-font :display-20))
+(def display-10 (partial create-font :display-10))
+(def title-40 (partial create-font :title-40))
+(def title-30 (partial create-font :title-30))
+(def title-20 (partial create-font :title-20))
+(def title-10 (partial create-font :title-10))
+(def body-30 (partial create-font :body-30))
+(def body-20 (partial create-font :body-20))
+(def body-10 (partial create-font :body-10))
+(def caption-30 (partial create-font :caption-30))
+(def caption-20 (partial create-font :caption-20))
+(def caption-10 (partial create-font :caption-10))
 
-(defn display-20
-  ([tag content] [display-20 tag {} content])
-  ([tag options content]
-   [render-text tag :display-20 options content]))
+(def display-20-alt (partial create-font :display-20-alt))
+(def display-10-alt (partial create-font :display-10-alt))
+(def title-40-alt (partial create-font :title-40-alt))
+(def title-30-alt (partial create-font :title-30-alt))
+(def title-20-alt (partial create-font :title-20-alt))
+(def title-10-alt (partial create-font :title-10-alt))
+(def body-30-alt (partial create-font :body-30-alt))
+(def body-20-alt (partial create-font :body-20-alt))
+(def body-10-alt (partial create-font :body-10-alt))
+(def caption-30-alt (partial create-font :caption-30-alt))
+(def caption-20-alt (partial create-font :caption-20-alt))
+(def caption-10-alt (partial create-font :caption-10-alt))
 
-(defn display-20-alt
-  ([tag content] [display-20-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :display-20 options content]))
+(defonce test-sentance
+  (str "Typography is the process of using type to print onto a page, "
+       "or the general look of letters and words on a page."))
 
-(defn display-10
-  ([tag content] [display-10 tag {} content])
-  ([tag options content]
-   [render-text tag :display-10 options content]))
+(defcard-rg display-20
+  "Display 20"
+  [display-20 :p test-sentance])
 
-(defn display-10-alt
-  ([tag content] [display-10-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :display-10 options content]))
+(defcard-rg display-10
+  "Display 10"
+  [display-10 :p test-sentance])
 
-(defn title-40
-  ([tag content] [title-40 tag {} content])
-  ([tag options content]
-   [render-text tag :title-40 options content]))
+(defcard-rg title-40
+  "Title 40"
+  [title-40 :p test-sentance])
 
-(defn title-40-alt
-  ([tag content] [title-40-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :title-40 options content]))
+(defcard-rg title-30
+  "Title 30"
+  [title-30 :p test-sentance])
 
-(defn title-30
-  ([tag content] [title-30 tag {} content])
-  ([tag options content]
-   [render-text tag :title-30 options content]))
+(defcard-rg title-20
+  "Title 20"
+  [title-20 :p test-sentance])
 
-(defn title-30-alt
-  ([tag content] [title-30-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :title-30 options content]))
+(defcard-rg title-10
+  "Title 10"
+  [title-10 :p test-sentance])
 
-(defn title-20
-  ([tag content] [title-20 tag {} content])
-  ([tag options content]
-   [render-text tag :title-20 options content]))
+(defcard-rg body-30
+  "Body 30"
+  [body-30 :p test-sentance])
 
-(defn title-20-alt
-  ([tag content] [title-20-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :title-20 options content]))
+(defcard-rg body-20
+  "Body 20"
+  [body-20 :p test-sentance])
 
-(defn title-10
-  ([tag content] [title-10 tag {} content])
-  ([tag options content]
-   [render-text tag :title-10 options content]))
+(defcard-rg body-10
+  "Body 10"
+  [body-10 :p test-sentance])
 
-(defn title-10-alt
-  ([tag content] [title-10-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :title-10 options content]))
+(defcard-rg caption-30
+  "Caption 30"
+  [caption-30 :p test-sentance])
 
-(defn body-30
-  ([tag content] [body-30 tag {} content])
-  ([tag options content]
-   [render-text tag :body-30 options content]))
+(defcard-rg caption-20
+  "Caption 20"
+  [caption-20 :p test-sentance])
 
-(defn body-30-alt
-  ([tag content] [body-30-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :body-30 options content]))
+(defcard-rg caption-10
+  "Caption 10"
+  [caption-10 :p test-sentance])
 
-(defn body-20
-  ([tag content] [body-20 tag {} content])
-  ([tag options content]
-   [render-text tag :body-20 options content]))
+(defcard-rg display-20-alt
+  "Display 20 (alt)"
+  [display-20-alt :p test-sentance])
 
-(defn body-20-alt
-  ([tag content] [body-20-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :body-20 options content]))
+(defcard-rg display-10-alt
+  "Display 10 (alt)"
+  [display-10-alt :p test-sentance])
 
-(defn body-10
-  ([tag content] [body-10 tag {} content])
-  ([tag options content]
-   [render-text tag :body-10 options content]))
+(defcard-rg title-40-atl
+  "Title 40 (alt)"
+  [title-40-alt :p test-sentance])
 
-(defn body-10-alt
-  ([tag content] [body-10-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :body-10 options content]))
+(defcard-rg title-30-alt
+  "Title 30 (alt)"
+  [title-30-alt :p test-sentance])
 
-(defn label-30
-  ([tag content] [label-30 tag {} content])
-  ([tag options content]
-   [render-text tag :label-30 options content]))
+(defcard-rg title-20-alt
+  "Title 20 (alt)"
+  [title-20-alt :p test-sentance])
 
-(defn label-30-alt
-  ([tag content] [label-30-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :label-30 options content]))
+(defcard-rg title-10-alt
+  "Title 10 (alt)"
+  [title-10-alt :p test-sentance])
 
-(defn label-20
-  ([tag content] [label-20 tag {} content])
-  ([tag options content]
-   [render-text tag :label-20 options content]))
+(defcard-rg body-30-alt
+  "Body 30 (alt)"
+  [body-30-alt :p test-sentance])
 
-(defn label-20-alt
-  ([tag content] [label-20-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :label-20 options content]))
+(defcard-rg body-20-alt
+  "Body 20 (alt)"
+  [body-20-alt :p test-sentance])
 
-(defn label-10
-  ([tag content] [label-10 tag {} content])
-  ([tag options content]
-   [render-text tag :label-10 options content]))
+(defcard-rg body-10-alt
+  "Body 10 (alt)"
+  [body-10-alt :p test-sentance])
 
-(defn label-10-alt
-  ([tag content] [label-10-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :label-10 options content]))
+(defcard-rg caption-30-alt
+  "Caption 30 (alt)"
+  [caption-30-alt :p test-sentance])
 
-(defn caption-30
-  ([tag content] [caption-30 tag {} content])
-  ([tag options content]
-   [render-text tag :caption-30 options content]))
+(defcard-rg caption-20-alt
+  "Caption 20 (alt)"
+  [caption-20-alt :p test-sentance])
 
-(defn caption-30-alt
-  ([tag content] [caption-30-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :caption-30 options content]))
-
-(defn caption-20
-  ([tag content] [caption-20 tag {} content])
-  ([tag options content]
-   [render-text tag :caption-20 options content]))
-
-(defn caption-20-alt
-  ([tag content] [caption-20-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :caption-20 options content]))
-
-(defn caption-10
-  ([tag content] [caption-10 tag {} content])
-  ([tag options content]
-   [render-text tag :caption-10 options content]))
-
-(defn caption-10-alt
-  ([tag content] [caption-10-alt tag {} content])
-  ([tag options content]
-   [render-secondary-text tag :caption-10 options content]))
-
-(defn link
-  [options content]
-  [:a (add-class options :link classes)
-   content])
-
-(defn paragraph
-  "Applies styles for a paragraph"
-  [& content]
-  (let [paragraph (into [:div (add-class {} :paragraph classes)]
-                        content)]
-    paragraph))
+(defcard-rg caption-10-alt
+  "Caption 10 (alt)"
+  [caption-10-alt :p test-sentance])

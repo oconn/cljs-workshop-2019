@@ -15,7 +15,6 @@
   [:<>
    [:<>
     [navbar/render]
-
     [router/router]]
    [re-frame-notifier/render-notifications]])
 

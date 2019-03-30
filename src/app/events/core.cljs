@@ -8,6 +8,12 @@
             [app.events.utils :refer [app-interceptors]]
             [app.router.routes :as routes]))
 
+(defn inc-counter
+  [db [_ button-name]]
+  (update-in db [:special-button button-name] inc))
+
+(re-frame/reg-event-db :special-button/inc-counter inc-counter)
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Third Party Re-Frame Events
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

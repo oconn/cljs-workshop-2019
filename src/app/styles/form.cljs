@@ -4,7 +4,7 @@
   [gs]
   {:font-size (gs [:font-size :caption-20])
    :font-weight (gs [:font-weight :caption-20])
-   :font-family (gs [:font-family :open-sans])
+   :font-family (gs [:font-family :primary])
    :letter-spacing "1.1px"
    :color (gs [:colors :gray-scale-600])})
 
@@ -12,7 +12,7 @@
   [gs]
   {:font-size (gs [:font-size :body-20])
    :letter-spacing "1.1px"
-   :font-family (gs [:font-family :open-sans])
+   :font-family (gs [:font-family :primary])
    :color (gs [:colors :gray-scale-600])
    :font-weight (gs [:font-weight :body-20])
 
@@ -52,7 +52,7 @@
    :transition "all 120ms linear"
    :color (gs [:colors :true-white])
    :font-size (gs [:font-size :label-20])
-   :font-family (gs [:font-family :open-sans])
+   :font-family (gs [:font-family :primary])
    :border :none
    :background-color (gs [:colors :primary-500])
    "&:focus" {:border-image :none}
