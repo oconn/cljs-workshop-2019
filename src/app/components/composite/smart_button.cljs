@@ -5,7 +5,9 @@
             [cljs.test :refer-macros [deftest is testing]]
             [re-frame.core :as re-frame]
 
-            [app.components.base.button :as button]))
+            [app.components.base.button :as button]
+            [app.events.utils :refer [reg-event-db
+                                      reg-event-fx]]))
 
 ;; DB (app.db.smart-button)
 
@@ -35,16 +37,16 @@
   [{:keys [db]} [_ {:keys [counter]}]]
   {:db (assoc-in db [:smart-button :counter] counter)})
 
-(re-frame/reg-event-fx :smart-button/inc-counter-success
-                       inc-counter-success)
+(reg-event-fx :smart-button/inc-counter-success
+              inc-counter-success)
 
 (defn inc-counter-failure
   [{:keys [db]} [_ err]]
   (js/console.warn "Handle Error!")
   {:db db})
 
-(re-frame/reg-event-fx :smart-button/inc-counter-failure
-                       inc-counter-failure)
+(reg-event-fx :smart-button/inc-counter-failure
+              inc-counter-failure)
 
 (defn inc-counter
   [{:keys [db]} [event-name]]
@@ -65,19 +67,25 @@
            ;; :error {}
            }}})
 
-(re-frame/reg-event-fx :smart-button/inc-counter inc-counter)
+(reg-event-fx :smart-button/inc-counter inc-counter)
 
 (defn inc-counter-directly
   [{:keys [db]} _]
   {:db (update-in db [:smart-button :counter] inc)})
 
-(re-frame/reg-event-fx :smart-button/inc-counter-directly inc-counter-directly)
+(reg-event-fx :smart-button/inc-counter-directly inc-counter-directly)
 
 (defn reset-counter
-  [{:keys [db]} _]
-  {:db (assoc-in db [:smart-button :counter] 0)})
+  [db _]
+  (assoc-in db [:smart-button :counter] 0))
 
-(re-frame/reg-event-fx :smart-button/reset-counter reset-counter)
+(reg-event-db :smart-button/reset-counter reset-counter)
+
+(defn set-counter
+  [db [_ value]]
+  (assoc-in db [:smart-button :counter] value))
+
+(reg-event-db :smart-button/set-counter set-counter)
 
 ;; View
 
@@ -124,6 +132,10 @@
   (re-frame/dispatch [:smart-button/inc-counter-directly])
   (re-frame/dispatch [:smart-button/inc-counter])
   (re-frame/dispatch [:smart-button/reset-counter])
+  (re-frame/dispatch [:smart-button/set-counter 1000])
+
+  ;; Test out specs. The following will inject invalid state into the db
+  (re-frame/dispatch [:smart-button/set-counter "cat"])
 
   @(re-frame/subscribe [:smart-button/counter])
   )
